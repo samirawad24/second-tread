@@ -892,7 +892,7 @@ const fillSizes = () => {
 };
 fillSizes();
 let fType = 'all';
-const qtyLabel = q => q===0 ? 'priced<br>each' : q===1 ? 'single' : q===2 ? 'pair' : q===4 ? 'full set' : 'tires';
+const qtyLabel = q => q===0 ? 'how many' : q===1 ? 'single' : q===2 ? 'pair' : q===4 ? 'full set' : 'tires';
 function renderInv(){
   const r = $('#fRim').value, s = $('#fSize').value, sort = $('#fSort').value;
   let list = inv.filter(t => (r==='all' || t.wheel==+r) && (s==='all' || t.size===s) && (fType==='all' || t.type===fType));
@@ -905,7 +905,7 @@ function renderInv(){
     <article class="card enter" style="animation-delay:${Math.min(i,16)*30}ms">
       <div class="row1">
         <div><div class="size">${t.type==='LT' && /^\d{3}\//.test(t.size) ? 'LT' : t.type==='T' && /^\d{3}\//.test(t.size) ? 'ST' : ''}${t.size}</div><div class="brand">${t.brand}</div><div class="model">${typeName[t.type]}${t.rim?' + wheel':''}</div></div>
-        <div class="qty"><b>${t.qty || '$'+t.each}</b>${qtyLabel(t.qty)}</div>
+        <div class="qty"><b>${t.qty || 'Ask'}</b>${qtyLabel(t.qty)}</div>
       </div>
       <div class="meta"><span>Mount and balance <b>included</b></span></div>
       <div class="bottom">
