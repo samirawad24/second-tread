@@ -325,7 +325,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   <div class="wrap">
     <div>
       <p class="eyebrow rv">Used tires, measured and mounted</p>
-      <h1 class="rv"><span class="strike">New price</span><br><span class="y">Half</span> the<br>price.</h1>
+      <h1 class="rv"><span class="strike">Retail</span><br><span class="y">Half</span> the<br>price.</h1>
       <p class="lede rv">Every tire on our rack gets a depth gauge, a date code check and a look inside before it's priced. You see the numbers. We mount and balance while you wait.</p>
       <div class="hero-ctas rv">
         <a href="#inventory" class="btn btn-y">See what's in stock</a>
@@ -447,8 +447,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
             <defs><clipPath id="pc"><circle cx="50" cy="50" r="46"/></clipPath></defs>
             <circle cx="50" cy="50" r="46" fill="#b8693a"/>
             <circle cx="50" cy="50" r="40" fill="none" stroke="#8f4c26" stroke-width="1.5"/>
-            <path d="M40 78 C38 66 36 60 38 52 C36 44 40 30 52 28 C62 27 66 36 64 44 C66 46 66 50 63 51 C64 58 60 64 58 70 L60 78 Z" fill="#8f4c26"/>
-            <g clip-path="url(#pc)"><rect id="pennyCover" x="0" y="60" width="100" height="40" fill="#1b1b19"/></g>
+            <path transform="rotate(180 50 50)" d="M40 78 C38 66 36 60 38 52 C36 44 40 30 52 28 C62 27 66 36 64 44 C66 46 66 50 63 51 C64 58 60 64 58 70 L60 78 Z" fill="#8f4c26"/>
+            <g clip-path="url(#pc)"><rect id="pennyCover" x="0" y="60" width="100" height="100" fill="#1b1b19"/></g>
           </svg>
           <p id="pennyText"></p>
         </div>
@@ -804,7 +804,7 @@ function onDepth(){
   set('m2', extra, extra ? '+' + extra + ' ft' : 'none', extra > 40 ? 'var(--rust)' : extra > 10 ? 'var(--marker)' : 'var(--ok)');
   set('m3', miles/50000*100, miles ? '~' + miles.toLocaleString() : '0', c);
   // penny: Lincoln's head top is about 2/32 from the edge. cover rises with depth.
-  const cover = 100 - (d/10)*62;
+  const cover = 96 - d*11;
   $('#pennyCover').setAttribute('y', cover);
   $('#pennyText').innerHTML = d <= 2 ? '<b>Penny test: you can see all of Lincoln\'s head.</b> That means 2/32 or less.' : d <= 4 ? '<b>Penny test: the top of his head is just covered.</b> Try a quarter: if Washington\'s hair shows, you\'re under 4/32.' : '<b>Penny test: his head disappears into the groove.</b> You have plenty of tread.';
 }
@@ -852,7 +852,7 @@ function renderInv(){
       <div class="tread-mini"><div class="blocks">${Array.from({length:10},(_,k)=>`<i class="${k<t.tread?(t.tread>=6?'f1':'f2'):''}"></i>`).join('')}</div><span>${t.tread}/32"</span></div>
       <div class="meta"><span>DOT <b>${dotLabel(t.dot)}</b></span><span>Saves <b>${Math.round((1-t.price/t.newp)*100)}%</b></span></div>
       <div class="bottom">
-        <div class="price">$${t.price}<s>$${t.newp}</s><small>each, new runs $${t.newp}</small></div>
+        <div class="price">$${t.price}<s>$${t.newp}</s><small>per tire, used</small></div>
         <button class="add ${ticket.has(t.id)?'in':''}" data-id="${t.id}">${ticket.has(t.id)?'On ticket':'Add set'}</button>
       </div>
     </article>`).join('');
