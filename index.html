@@ -61,7 +61,26 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;op
 .btn-o{background:transparent;color:var(--chalk);box-shadow:inset 0 0 0 2px var(--chalk)}
 .btn-o:hover{background:var(--chalk);color:var(--ink)}
 .nav .btn{padding:11px 16px;font-size:14px}
-@media (max-width:860px){.nav ul{display:none}}
+.burger{display:none;width:46px;height:46px;background:none;border:2px solid var(--line);border-radius:var(--radius);position:relative;margin-left:10px}
+.burger i{position:absolute;left:11px;right:11px;height:2px;background:var(--chalk);transition:transform .3s,top .3s}
+.burger i:first-child{top:16px}.burger i:last-child{top:26px}
+.menu-open .burger i:first-child{top:20px;transform:rotate(45deg)}
+.menu-open .burger i:last-child{top:20px;transform:rotate(-45deg)}
+.nav-right{display:flex;align-items:center}
+.mmenu{position:fixed;inset:0;z-index:45;background:var(--ink);padding:100px 24px 40px;display:flex;flex-direction:column;justify-content:space-between;clip-path:circle(0 at calc(100% - 47px) 36px);transition:clip-path .6s cubic-bezier(.7,0,.2,1);visibility:hidden}
+.menu-open .mmenu{clip-path:circle(150% at calc(100% - 47px) 36px);visibility:visible}
+.mmenu ol{list-style:none;counter-reset:m}
+.mmenu li{border-bottom:1px solid var(--line);counter-increment:m}
+.mmenu li a{display:flex;align-items:baseline;gap:16px;padding:16px 0;font-weight:900;text-transform:uppercase;font-size:clamp(32px,9vw,52px);letter-spacing:-.02em;line-height:1;text-decoration:none;opacity:0;transform:translateY(20px);transition:opacity .4s,transform .4s,color .2s}
+.mmenu li a::before{content:"0" counter(m);font-family:"JetBrains Mono";font-size:13px;color:var(--marker);font-weight:700;letter-spacing:0}
+.mmenu li a:hover{color:var(--marker)}
+.menu-open .mmenu li a{opacity:1;transform:none}
+.menu-open .mmenu li:nth-child(1) a{transition-delay:.18s}.menu-open .mmenu li:nth-child(2) a{transition-delay:.23s}.menu-open .mmenu li:nth-child(3) a{transition-delay:.28s}.menu-open .mmenu li:nth-child(4) a{transition-delay:.33s}.menu-open .mmenu li:nth-child(5) a{transition-delay:.38s}
+.mmenu .foot{display:grid;gap:12px;color:var(--chalk-dim);font-size:15px}
+.mmenu .foot .btn{justify-content:center}
+body.menu-open{overflow:hidden}
+@media (max-width:860px){.nav ul{display:none}.burger{display:block}}
+@media (max-width:480px){.nav .btn-y{display:none}}
 
 /* HERO */
 .hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:110px 0 60px;overflow:hidden}
@@ -317,9 +336,25 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
       <li><a href="#quote">Quote</a></li>
       <li><a href="#visit">Visit</a></li>
     </ul>
-    <a href="tel:+14075550142" class="btn btn-y">Call (407) 555-0142</a>
+    <div class="nav-right">
+      <a href="tel:+14075550142" class="btn btn-y">Call (407) 555-0142</a>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mmenu"><i></i><i></i></button>
+    </div>
   </div>
 </nav>
+<div class="mmenu" id="mmenu" aria-hidden="true">
+  <ol>
+    <li><a href="#decoder">Read your size</a></li>
+    <li><a href="#tread">Tread check</a></li>
+    <li><a href="#inventory">In stock</a></li>
+    <li><a href="#quote">Quote</a></li>
+    <li><a href="#visit">Visit</a></li>
+  </ol>
+  <div class="foot">
+    <a href="tel:+14075550142" class="btn btn-y">Call (407) 555-0142</a>
+    <span>4120 E Colonial Dr, Orlando. Walk-ins all day.</span>
+  </div>
+</div>
 
 <header class="hero" id="top">
   <div class="wrap">
@@ -609,6 +644,17 @@ const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (c
 /* nav */
 const nav = $('#nav');
 addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30), {passive:true});
+const burger = $('#burger'), mmenu = $('#mmenu');
+const setMenu = open => {
+  document.body.classList.toggle('menu-open', open);
+  burger.setAttribute('aria-expanded', open); burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  mmenu.setAttribute('aria-hidden', !open);
+  if (open) mmenu.querySelector('a').focus({preventScroll:true});
+};
+burger.onclick = () => setMenu(!document.body.classList.contains('menu-open'));
+mmenu.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('menu-open')) { setMenu(false); burger.focus(); } });
+addEventListener('resize', () => { if (innerWidth > 860) setMenu(false); });
 
 /* ---------- HERO TIRE ---------- */
 const tb = $('#treadBlocks');
